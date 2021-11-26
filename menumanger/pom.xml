@@ -14,7 +14,7 @@
 	<name>Menu Manger</name>
 	<description>Menu Manger, the managing system for your menu&apos;s and restaurants</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
