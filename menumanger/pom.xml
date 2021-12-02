@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>nl.hu.bep3.groep2</groupId>
-	<artifactId>menu-manger</artifactId>
+	<artifactId>menumanger</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Menu Manger</name>
 	<description>Menu Manger, the managing system for your menu&apos;s and restaurants</description>
