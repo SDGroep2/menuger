@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>nl.hu.bep3.groep2</groupId>
-	<artifactId>Overviewmanger</artifactId>
+	<artifactId>overviewmanger</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Overviewmanger</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Overview Manger</name>
+	<description>Overview manger, the statistics system for your restaurant</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
