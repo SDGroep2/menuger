@@ -2,9 +2,10 @@ package nl.hu.bep3.groep2.inventorymanger.core.application;
 
 import nl.hu.bep3.groep2.inventorymanger.core.ports.storage.InventoryRepository;
 import nl.hu.bep3.groep2.inventorymanger.infrastructure.driven.messaging.Publisher;
-import org.springframework.stereotype.Component;
+import nl.hu.bep3.groep2.inventorymanger.infrastructure.driver.messaging.event.InventoryEvent;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class InventoryCommandHandler {
     private final InventoryRepository repository;
     private final Publisher publisher;
@@ -14,5 +15,9 @@ public class InventoryCommandHandler {
         this.publisher = publisher;
     }
 
-
+    public void handle(InventoryEvent inventoryEvent) {
+        inventoryEvent.getIngredients().keySet().forEach((name)->{
+            System.out.println(repository.findByName(name).orElseThrow(() -> new RuntimeException("doo doo brain")).getName());
+        });
+    }
 }

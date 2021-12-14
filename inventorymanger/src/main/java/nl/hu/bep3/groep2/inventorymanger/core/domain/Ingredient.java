@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-@Document
+@Document(collection = "ingredients")
 @Getter
 @Setter
 public class Ingredient {
@@ -16,9 +16,13 @@ public class Ingredient {
     private UUID id;
     @Indexed(unique = true)
     private String name;
+    private int amount;
+    private int amountReserved;
 
-    public Ingredient(UUID id, String name) {
+    public Ingredient(UUID id, String name, int amount, int amountReserved) {
         this.id = id;
         this.name = name;
+        this.amount = amount;
+        this.amountReserved = amountReserved;
     }
 }

@@ -4,11 +4,9 @@ import nl.hu.bep3.groep2.inventorymanger.core.application.query.GetIngredientsBy
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
 import nl.hu.bep3.groep2.inventorymanger.core.ports.storage.InventoryRepository;
 import nl.hu.bep3.groep2.inventorymanger.infrastructure.driven.messaging.Publisher;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Component
+@Service
 public class InventoryQueryHandler {
     private final InventoryRepository repository;
     private final Publisher publisher;
