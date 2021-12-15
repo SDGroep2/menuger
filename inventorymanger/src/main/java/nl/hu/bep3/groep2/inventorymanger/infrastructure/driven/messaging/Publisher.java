@@ -3,7 +3,7 @@ package nl.hu.bep3.groep2.inventorymanger.infrastructure.driven.messaging;
 import lombok.AllArgsConstructor;
 import nl.hu.bep3.groep2.inventorymanger.CustomMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 import java.util.UUID;
@@ -11,13 +11,17 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Publisher {
 	private final RabbitTemplate rabbitTemplate;
+	@Value("${menuger.exchange}")
 	private final String messageExchange;
+	@Value("${menu-inventory.routing-key}")
 	private final String routingKey;
 
-	public String publishMessage(@RequestBody CustomMessage message) {
-		message.setMessageId(UUID.randomUUID().toString());
-		message.setMessageDate(new Date());
-		rabbitTemplate.convertAndSend(messageExchange, routingKey, message);
-		return "Message Published";
+	public void publishMessage(String message) {
+		CustomMessage customMessage = new CustomMessage();
+		customMessage.setMessage(message);
+		customMessage.setMessageId(UUID.randomUUID().toString());
+		customMessage.setMessageDate(new Date());
+		rabbitTemplate.convertAndSend(messageExchange, routingKey, customMessage);
+		System.out.printf("Message %s sent!", message);
 	}
 }

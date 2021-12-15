@@ -15,11 +15,11 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 public class MQConfig {
-	@Value("${messaging.queue}")
+	@Value("${menu-inventory.queue}")
 	public String QUEUE;
-	@Value("${messaging.exchange}")
+	@Value("${menuger.exchange}")
 	public String EXCHANGE;
-	@Value("${messaging.routing-key}")
+	@Value("${menu-inventory.routing-key}")
 	public String ROUTING_KEY;
 	@Value("${spring.rabbitmq.host}")
 	public String HOST;

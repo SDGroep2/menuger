@@ -1,6 +1,7 @@
 version: "3.7"
 services:
   rabbitmq:
+    container_name: RabbitMQ
     image: rabbitmq:3-management-alpine
     ports:
       - 5672:5672
@@ -10,11 +11,11 @@ services:
       - ./rabbitmq/volume/log/:/var/log/rabbitmq
 
   mongodb:
+    container_name: MongoDB
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      #      root/rootpassword
+      MONGO_INITDB_ROOT_USERNAME: steve
+      MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - 27017:27017
     volumes:
