@@ -11,9 +11,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Publisher {
 	private final RabbitTemplate rabbitTemplate;
-	@Value("${messaging.exchange}")
+	@Value("${menuger.exchange}")
 	private final String messageExchange;
-	@Value("${messaging.routing-key}")
+	@Value("${menu-inventory.routing-key}")
 	private final String routingKey;
 
 	public void publishMessage(String message) {

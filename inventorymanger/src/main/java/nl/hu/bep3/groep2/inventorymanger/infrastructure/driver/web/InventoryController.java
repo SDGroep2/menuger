@@ -1,6 +1,7 @@
 package nl.hu.bep3.groep2.inventorymanger.infrastructure.driver.web;
 
-//import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryCommandHandler;
+import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryCommandHandler;
+import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryCommandHandler;
 import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryQueryHandler;
 import nl.hu.bep3.groep2.inventorymanger.core.application.query.GetIngredientsByName;
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
@@ -10,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/inventory")
 public class InventoryController {
-//    private final InventoryCommandHandler commandHandler;
+    private final InventoryCommandHandler commandHandler;
     private final InventoryQueryHandler queryHandler;
 
-    public InventoryController( InventoryQueryHandler queryHandler) {
-//        this.commandHandler = commandHandler;
+    public InventoryController(InventoryCommandHandler commandHandler, InventoryQueryHandler queryHandler) {
+        this.commandHandler = commandHandler;
         this.queryHandler = queryHandler;
     }
 
@@ -25,7 +26,7 @@ public class InventoryController {
 
     @GetMapping("/dothing")
     public String getThing(@RequestBody InventoryEvent event){
-//        commandHandler.handle(event);
+        commandHandler.handle(event);
         return "dinglebooty";
     }
 

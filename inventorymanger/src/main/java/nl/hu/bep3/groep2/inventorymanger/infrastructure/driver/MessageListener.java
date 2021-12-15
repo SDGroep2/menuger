@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MessageListener {
-//	private InventoryCommandHandler inventoryCommandHandler;
+	private final InventoryCommandHandler inventoryCommandHandler;
 
-	public MessageListener() {
-//		this.inventoryCommandHandler = inventoryCommandHandler;
+	public MessageListener(InventoryCommandHandler inventoryCommandHandler) {
+		this.inventoryCommandHandler = inventoryCommandHandler;
 	}
 
 	@RabbitListener(queues = "#{'${menu-inventory.queue}'}")
-	public void listen() {
-//		inventoryCommandHandler.handle(inventoryEvent);
+	public void listen(InventoryEvent inventoryEvent) {
+		inventoryCommandHandler.handle(inventoryEvent);
 	}
 }
