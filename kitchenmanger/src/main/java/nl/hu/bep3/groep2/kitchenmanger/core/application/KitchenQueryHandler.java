@@ -1,26 +1,36 @@
 package nl.hu.bep3.groep2.kitchenmanger.core.application;
 
-import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetKitchenByName;
-import nl.hu.bep3.groep2.kitchenmanger.core.domain.Kitchen;
-import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.KitchenRepository;
+import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetAllOrders;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.OrderRepository;
 import nl.hu.bep3.groep2.kitchenmanger.infrastructure.driven.messaging.Publisher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class KitchenQueryHandler {
-	private final KitchenRepository repository;
+	private final OrderRepository orderRepository;
 	private final Publisher publisher;
 
-	public KitchenQueryHandler(KitchenRepository repository, Publisher publisher) {
-		this.repository = repository;
+	public KitchenQueryHandler(OrderRepository orderRepository, Publisher publisher) {
+		this.orderRepository = orderRepository;
 		this.publisher = publisher;
 	}
 
-	public List<Kitchen> handle(GetKitchenByName getKitchenByName) {
-		String name = getKitchenByName.getName();
-		publisher.publishMessage(String.format("%s", name));
-		return this.repository.findByName(name);
+	public List<Order> handle(GetAllOrders query) {
+		Sort sort = createSort(query.getOrderBy(), query.getDirection());
+		return this.orderRepository.findAll(sort);
+	}
+
+	private Sort createSort(String orderBy, String direction) {
+		Sort sort = Sort.by(Sort.Direction.ASC, orderBy);
+
+		if (direction.equals("desc")) {
+			sort = sort.descending();
+		}
+
+		return sort;
 	}
 }
