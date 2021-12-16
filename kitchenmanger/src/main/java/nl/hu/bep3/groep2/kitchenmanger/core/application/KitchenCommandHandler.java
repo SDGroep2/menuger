@@ -1,14 +1,13 @@
 package nl.hu.bep3.groep2.kitchenmanger.core.application;
 
-import nl.hu.bep3.groep2.kitchenmanger.core.application.command.CreateNewKitchen;
-import nl.hu.bep3.groep2.kitchenmanger.core.application.command.FinishedOrder;
-import nl.hu.bep3.groep2.kitchenmanger.core.domain.Kitchen;
-import nl.hu.bep3.groep2.kitchenmanger.core.domain.event.KitchenEvent;
-import nl.hu.bep3.groep2.kitchenmanger.core.domain.exception.KitchenNotFoundException;
-import nl.hu.bep3.groep2.kitchenmanger.core.port.messaging.KitchenEventPublisher;
-import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.KitchenRepository;
+import nl.hu.bep3.groep2.kitchenmanger.core.application.command.ChangeOrderStatus;
+import nl.hu.bep3.groep2.kitchenmanger.core.application.command.CreateNewOrder;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.event.OrderEvent;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.exception.OrderIdNotFoundException;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.messaging.OrderEventPublisher;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.OrderRepository;
 import nl.hu.bep3.groep2.kitchenmanger.infrastructure.driven.messaging.Publisher;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,40 +15,45 @@ import java.util.UUID;
 
 @Service
 public class KitchenCommandHandler {
-	private final KitchenRepository repository;
+	private final OrderRepository orderRepository;
+	private final OrderEventPublisher orderEventPublisher;
 	private final Publisher publisher;
-	private final KitchenEventPublisher kitchenEventPublisher;
 
-	public KitchenCommandHandler(KitchenRepository repository, Publisher publisher, KitchenEventPublisher kitchenEventPublisher) {
-		this.repository = repository;
+	public KitchenCommandHandler(OrderRepository orderRepository, OrderEventPublisher orderEventPublisher, Publisher publisher) {
+		this.orderRepository = orderRepository;
+		this.orderEventPublisher = orderEventPublisher;
 		this.publisher = publisher;
-		this.kitchenEventPublisher = kitchenEventPublisher;
 	}
 
-	public Kitchen handle(CreateNewKitchen newKitchen) {
-		String name = newKitchen.getName();
-		publisher.publishMessage(String.format("new kitchen %s was created", name));
-		return repository.save(new Kitchen(name));
+	public Order handle(CreateNewOrder command) {
+		Order order = new Order(command.getTable(), command.getMeals(), command.getStatus());
+
+		this.publishEventsFor(order);
+		this.orderRepository.save(order);
+
+		return order;
 	}
 
-	public Kitchen handle(FinishedOrder command) {
-		Kitchen kitchen = this.getKitchenById(command.getId());
+	public Order handle(ChangeOrderStatus command) {
+		Order order = this.getOrderById(command.getId());
 
-		kitchen.FinishOrder(command.getOrder());
-		this.publishEventsFor(kitchen);
-		this.repository.save(kitchen);
+		order.changeOrderStatus(command.getStatus());
+		this.publishEventsFor(order);
+		this.orderRepository.save(order);
 
-		return kitchen;
+		return order;
 	}
 
-	private Kitchen getKitchenById(UUID id) {
-		return this.repository.findById(id)
-				.orElseThrow(() -> new KitchenNotFoundException(id.toString()));
+	private Order getOrderById(UUID id) {
+		return this.orderRepository.findById(id)
+				.orElseThrow(() -> new OrderIdNotFoundException(id.toString()));
 	}
 
-	private void publishEventsFor(Kitchen kitchen) {
-		List<KitchenEvent> events = kitchen.listEvents();
-		events.forEach(kitchenEventPublisher::publish);
-		kitchen.clearEvents();
+	private void publishEventsFor(Order order) {
+		List<OrderEvent> events = order.listEvents();
+		events.forEach(orderEventPublisher::publish);
+		order.clearEvents();
 	}
+
+
 }
