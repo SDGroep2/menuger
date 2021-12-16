@@ -1,7 +1,7 @@
 package nl.hu.bep3.groep2.menumanger.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.hu.bep3.groep2.menumanger.infrastructure.driven.messaging.Publisher;
+import nl.hu.bep3.groep2.menumanger.core.port.messaging.Publisher;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -14,11 +14,11 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 public class MQConfig {
-	@Value("${messaging.queue}")
+	@Value("${menu-kitchen.queue}")
 	public String QUEUE;
-	@Value("${messaging.exchange}")
+	@Value("${menuger.exchange}")
 	public String EXCHANGE;
-	@Value("${messaging.routing-key}")
+	@Value("${menu-kitchen.routing-key}")
 	public String ROUTING_KEY;
 	@Value("${spring.rabbitmq.host}")
 	public String HOST;
@@ -75,6 +75,6 @@ public class MQConfig {
 
 	@Bean
 	public Publisher EventPublisher(RabbitTemplate template) {
-		return new Publisher(template, EXCHANGE, QUEUE);
+		return new Publisher(template, EXCHANGE);
 	}
 }
