@@ -3,8 +3,7 @@ package nl.hu.bep3.groep2.menumanger.infrastructure.driver.web;
 import nl.hu.bep3.groep2.menumanger.core.application.MealCommandHandler;
 import nl.hu.bep3.groep2.menumanger.core.application.MenuQueryHandler;
 import nl.hu.bep3.groep2.menumanger.core.application.command.CreateMeal;
-import nl.hu.bep3.groep2.menumanger.core.application.command.CreateOrder;
-import nl.hu.bep3.groep2.menumanger.core.application.query.GetMealByName;
+import nl.hu.bep3.groep2.menumanger.core.application.query.GetMenusByName;
 import nl.hu.bep3.groep2.menumanger.core.domain.Meal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,22 +21,12 @@ public class MealController {
 	}
 
 	@GetMapping("/{name}")
-	public Meal getMealByName(@PathVariable String name) {
-		return queryHandler.handle(new GetMealByName(name));
-	}
-
-	@GetMapping
-	public List<Meal> getAvailableMeals() {
-		return queryHandler.handle();
+	public List<Meal> getMenuByName(@PathVariable String name) {
+		return queryHandler.handle(new GetMenusByName(name));
 	}
 
 	@PostMapping
 	public Meal createMeal(@RequestBody CreateMeal newMeal) {
 		return commandHandler.handle(newMeal);
-	}
-
-	@PostMapping("/order")
-	public CreateOrder createOrder(@RequestBody CreateOrder createOrder) {
-		return commandHandler.handle(createOrder);
 	}
 }
