@@ -5,18 +5,21 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.UUID;
 
-@Document
 @Getter
 @Setter
-public class Menu {
+@Document(collection = "meals")
+public class Meal {
 	@Id
-	private UUID id;
 	private String name;
+	private double price;
+	private List<String> ingredients;
 
-	public Menu(String name) {
-		this.id = UUID.randomUUID();
+	public Meal(String name, double price, List<String> ingredients) {
 		this.name = name;
+		this.price = price;
+		this.ingredients = ingredients;
 	}
 }
