@@ -2,11 +2,10 @@ package nl.hu.bep3.groep2.inventorymanger.infrastructure.driver.web;
 
 import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryCommandHandler;
 import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryQueryHandler;
+import nl.hu.bep3.groep2.inventorymanger.core.application.query.CheckIngredientAvailable;
 import nl.hu.bep3.groep2.inventorymanger.core.application.query.GetIngredientsByName;
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
-import nl.hu.bep3.groep2.inventorymanger.core.application.query.CheckIngredientsAvailable;
 import nl.hu.bep3.groep2.inventorymanger.core.application.command.MakeNewIngredients;
-import nl.hu.bep3.groep2.inventorymanger.infrastructure.driver.messaging.event.OrderPlacedEvent;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,9 +24,9 @@ public class InventoryController {
         return queryHandler.handle(new GetIngredientsByName(name));
     }
 
-    @GetMapping("/available")
-    public boolean ingredientsAreAvailable(@RequestBody CheckIngredientsAvailable query){
-        return queryHandler.handle(query);
+    @GetMapping("/")
+    public boolean checkIngredientisAvailable(@RequestParam String name, @RequestParam int amount){
+        return queryHandler.handle(new CheckIngredientAvailable(name, amount));
     }
 
     @PostMapping()
