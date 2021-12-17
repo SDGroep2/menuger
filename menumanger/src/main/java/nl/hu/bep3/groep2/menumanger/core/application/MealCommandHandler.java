@@ -5,18 +5,25 @@ import nl.hu.bep3.groep2.menumanger.core.application.command.CreateMeal;
 import nl.hu.bep3.groep2.menumanger.core.application.command.CreateOrder;
 import nl.hu.bep3.groep2.menumanger.core.domain.Meal;
 import nl.hu.bep3.groep2.menumanger.core.domain.exception.MealAlreadyExistsException;
+import nl.hu.bep3.groep2.menumanger.core.domain.exception.MealNotFoundException;
+import nl.hu.bep3.groep2.menumanger.core.port.storage.KitchenRepository;
 import nl.hu.bep3.groep2.menumanger.core.port.storage.MealRepository;
 import nl.hu.bep3.groep2.menumanger.core.domain.event.MealWasCreated;
 import nl.hu.bep3.groep2.menumanger.core.port.messaging.Publisher;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class MealCommandHandler {
 	private final MealRepository repository;
+	private final KitchenRepository kitchenRepository;
 	private final Publisher publisher;
 
-	public MealCommandHandler(MealRepository repository, Publisher publisher) {
+	public MealCommandHandler(MealRepository repository, KitchenRepository kitchenRepository, Publisher publisher) {
 		this.repository = repository;
+		this.kitchenRepository = kitchenRepository;
 		this.publisher = publisher;
 	}
 
@@ -32,6 +39,8 @@ public class MealCommandHandler {
 	}
 
 	public CreateOrder handle(CreateOrder createOrder) {
-		return createOrder;
+		createOrder.meals().forEach(meal -> repository.findByName(meal)
+				.orElseThrow(() -> new MealNotFoundException(meal)));
+		return kitchenRepository.save(createOrder);
 	}
 }

@@ -15,7 +15,7 @@ public record MenuQueryHandler(MealRepository repository, IngredientRepository i
 	public Meal handle(GetMealByName getMealByName) {
 		String name = getMealByName.name();
 		return this.repository.findByName(name).orElseThrow(() ->
-				new MealNotFoundException("No meal with the name " + name + " was found"));
+				new MealNotFoundException(name));
 	}
 	public List<Meal> handle() {
 		List<Meal> meals = repository.findAll();
