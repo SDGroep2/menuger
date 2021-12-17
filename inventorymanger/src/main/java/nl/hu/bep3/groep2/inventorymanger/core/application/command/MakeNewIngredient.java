@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public class MakeNewIngredients {
+public class MakeNewIngredient {
     private Map<String, Integer> ingredients;
 
     @JsonCreator
-    public MakeNewIngredients(Map<String, Integer> ingredients) {
+    public MakeNewIngredient(Map<String, Integer> ingredients) {
         this.ingredients = ingredients;
     }
 }

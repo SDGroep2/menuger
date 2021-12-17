@@ -2,11 +2,13 @@ package nl.hu.bep3.groep2.inventorymanger.infrastructure.driver.web;
 
 import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryCommandHandler;
 import nl.hu.bep3.groep2.inventorymanger.core.application.InventoryQueryHandler;
+import nl.hu.bep3.groep2.inventorymanger.core.application.command.UpdateIngredient;
+import nl.hu.bep3.groep2.inventorymanger.core.application.exceptions.IngredientAlreadyExistsException;
 import nl.hu.bep3.groep2.inventorymanger.core.application.exceptions.IngredientNotFoundException;
 import nl.hu.bep3.groep2.inventorymanger.core.application.query.CheckIngredientAvailable;
 import nl.hu.bep3.groep2.inventorymanger.core.application.query.GetIngredientsByName;
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
-import nl.hu.bep3.groep2.inventorymanger.core.application.command.MakeNewIngredients;
+import nl.hu.bep3.groep2.inventorymanger.core.application.command.MakeNewIngredient;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +33,11 @@ public class InventoryController {
     }
 
     @PostMapping()
-    public void newIngredients(@RequestBody MakeNewIngredients command) throws IngredientNotFoundException {
+    public void newIngredient(@RequestBody MakeNewIngredient command) throws IngredientAlreadyExistsException {
+        commandHandler.handle(command);
+    }
+    @PutMapping()
+    public void updateIngredient(@RequestBody UpdateIngredient command) throws IngredientNotFoundException {
         commandHandler.handle(command);
     }
 }

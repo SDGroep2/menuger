@@ -20,6 +20,7 @@ public class InventoryQueryHandler {
                 orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + query.getName()));
     }
 
+    //gives true if the specified amount of the specified ingredient is available, gives false otherwise.
     public boolean handle(CheckIngredientAvailable query) throws IngredientNotFoundException {
         Ingredient dbIngredient = repository.findByName(query.getName())
                 .orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + query.getName()));
