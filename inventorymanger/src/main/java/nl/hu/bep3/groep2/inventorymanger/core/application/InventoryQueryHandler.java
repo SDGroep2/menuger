@@ -1,5 +1,6 @@
 package nl.hu.bep3.groep2.inventorymanger.core.application;
 
+import nl.hu.bep3.groep2.inventorymanger.core.application.exceptions.IngredientNotFoundException;
 import nl.hu.bep3.groep2.inventorymanger.core.application.query.CheckIngredientAvailable;
 import nl.hu.bep3.groep2.inventorymanger.core.application.query.GetIngredientsByName;
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
@@ -14,12 +15,14 @@ public class InventoryQueryHandler {
         this.repository = repository;
     }
 
-    public Ingredient handle(GetIngredientsByName query) {
-        return repository.findByName(query.getName()).orElseThrow(() -> new RuntimeException("Not Found"));
+    public Ingredient handle(GetIngredientsByName query) throws IngredientNotFoundException {
+        return repository.findByName(query.getName()).
+                orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + query.getName()));
     }
 
-    public boolean handle(CheckIngredientAvailable query) {
-        Ingredient dbIngredient = repository.findByName(query.getName()).orElseThrow(() -> new RuntimeException("ingredient not found"));
+    public boolean handle(CheckIngredientAvailable query) throws IngredientNotFoundException {
+        Ingredient dbIngredient = repository.findByName(query.getName())
+                .orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + query.getName()));
         return (dbIngredient.getAmount() - dbIngredient.getAmountReserved()) >=  query.getAmount();
     }
 

@@ -3,6 +3,7 @@ package nl.hu.bep3.groep2.inventorymanger.core.application;
 import nl.hu.bep3.groep2.inventorymanger.core.application.command.MakeNewIngredients;
 import nl.hu.bep3.groep2.inventorymanger.core.application.command.OrderCreated;
 import nl.hu.bep3.groep2.inventorymanger.core.application.command.OrderUpdated;
+import nl.hu.bep3.groep2.inventorymanger.core.application.exceptions.IngredientNotFoundException;
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
 import nl.hu.bep3.groep2.inventorymanger.core.ports.storage.InventoryRepository;
 import org.springframework.stereotype.Service;
@@ -15,39 +16,39 @@ public class InventoryCommandHandler {
         this.repository = repository;
     }
 
-    public void handle(MakeNewIngredients command) {
-        command.getIngredients().keySet().forEach((name) -> {
+    public void handle(MakeNewIngredients command) throws IngredientNotFoundException {
+        for (String name : command.getIngredients().keySet()) {
             Ingredient dbIngredient = repository.findByName(name)
-                    .orElseThrow(() -> new RuntimeException("ingredient not found"));
+                    .orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + name));
             int newAmount = dbIngredient.getAmount() + command.getIngredients().get(name);
             dbIngredient.setAmount(newAmount);
             repository.save(dbIngredient);
-        });
+        };
     }
 
-    public void handle(OrderCreated command) {
+    public void handle(OrderCreated command) throws IngredientNotFoundException {
         //TODO: replace get ingredients with call to kitchen database
-        command.getIngredients().keySet().forEach((name) -> {
+        for (String name : command.getIngredients().keySet()) {
             Ingredient dbIngredient = repository.findByName(name)
-                    .orElseThrow(() -> new RuntimeException("ingredient not found"));
+                    .orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + name));
             int newAmountReserved = dbIngredient.getAmountReserved() + command.getIngredients().get(name);
             if (newAmountReserved <= dbIngredient.getAmount()) {
                 dbIngredient.setAmountReserved(newAmountReserved);
                 repository.save(dbIngredient);
             }
-        });
+        };
     }
-    public void handle(OrderUpdated command) {
+    public void handle(OrderUpdated command) throws IngredientNotFoundException {
         //TODO: replace get ingredients with call to kitchen database
-        command.getIngredients().keySet().forEach((name) -> {
+        for (String name : command.getIngredients().keySet()) {
             Ingredient dbIngredient = repository.findByName(name)
-                    .orElseThrow(() -> new RuntimeException("ingredient not found"));
+                    .orElseThrow(() -> new IngredientNotFoundException("Something went wrong getting the following ingredient: " + name));
             int newAmount = dbIngredient.getAmount() - command.getIngredients().get(name);
             int newAmountReserved = dbIngredient.getAmount() - command.getIngredients().get(name);
             dbIngredient.setAmount(newAmount);
             dbIngredient.setAmountReserved(newAmountReserved);
             repository.save(dbIngredient);
-        });
+        };
 
     }
 }
