@@ -27,7 +27,7 @@ public class InventoryController {
         return queryHandler.handle(new GetIngredientsByName(name));
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public boolean checkIngredientisAvailable(@RequestParam String name, @RequestParam int amount) throws IngredientNotFoundException {
         return queryHandler.handle(new CheckIngredientAvailable(name, amount));
     }
