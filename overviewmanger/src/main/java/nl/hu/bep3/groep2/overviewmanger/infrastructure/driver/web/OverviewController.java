@@ -7,5 +7,5 @@ import java.util.List;
 @RestController
 @RequestMapping("/overview")
 public class OverviewController {
-    //return sick statistics and stuff
+    //TODO: return sick statistics and stuff
 }

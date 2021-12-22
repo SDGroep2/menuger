@@ -18,8 +18,8 @@ public class MessageListener {
     @RabbitListener(queues = "#{'${overview.order.queue}'}")
     public void listen(OverviewOrderEvent overviewEvent) {
         switch (overviewEvent.getEventKey()) {
-            case "kitchen.orders.created" -> overviewCommandHandler.handle(new OrderCreated(overviewEvent.getOrderId()));
-            case "kitchen.orders.updated" -> overviewCommandHandler.handle(new OrderUpdated(overviewEvent.getOrderId(), overviewEvent.getStatus()));
+            case "kitchen.orders.created" -> overviewCommandHandler.handle(new OrderCreated(overviewEvent.getOrderId(), overviewEvent.getEventDate()));
+            case "kitchen.orders.updated" -> overviewCommandHandler.handle(new OrderUpdated(overviewEvent.getOrderId(), overviewEvent.getStatus(), overviewEvent.getEventDate()));
         }
     }
 }

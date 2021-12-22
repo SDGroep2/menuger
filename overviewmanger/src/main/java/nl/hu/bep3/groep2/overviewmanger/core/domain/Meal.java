@@ -16,10 +16,12 @@ public class Meal {
     private String name;
     private List<String> ingredients;
     private double price;
+    private int amount;
 
-    public Meal(String name, List<String> ingredients, double price) {
+    public Meal(String name, List<String> ingredients, double price, int amount) {
         this.name = name;
         this.ingredients = ingredients;
         this.price = price;
+        this.amount = amount;
     }
 }

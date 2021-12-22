@@ -1,7 +1,6 @@
 package nl.hu.bep3.groep2.overviewmanger.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.hu.bep3.groep2.overviewmanger.infrastructure.driven.messaging.Publisher;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -91,9 +90,6 @@ public class MQConfig {
         return new CachingConnectionFactory(HOST, PORT);
     }
 
-    @Bean
-    public Publisher EventPublisher(RabbitTemplate template) {
-        return new Publisher(template, EXCHANGE, QUEUE);
-    }
+
 }
 
