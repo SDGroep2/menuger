@@ -1,27 +1,35 @@
 package nl.hu.bep3.groep2.menumanger.core.application;
 
-import nl.hu.bep3.groep2.menumanger.core.application.query.GetMenusByName;
-import nl.hu.bep3.groep2.menumanger.core.domain.Menu;
-import nl.hu.bep3.groep2.menumanger.core.domain.exception.MenuNotFoundException;
-import nl.hu.bep3.groep2.menumanger.core.port.storage.MenuRepository;
-import nl.hu.bep3.groep2.menumanger.infrastructure.driven.messaging.Publisher;
+import nl.hu.bep3.groep2.menumanger.core.application.query.GetMealByName;
+import nl.hu.bep3.groep2.menumanger.core.domain.Meal;
+import nl.hu.bep3.groep2.menumanger.core.domain.exception.MealNotFoundException;
+import nl.hu.bep3.groep2.menumanger.core.port.storage.IngredientRepository;
+import nl.hu.bep3.groep2.menumanger.core.port.storage.MealRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MenuQueryHandler {
-	private final MenuRepository repository;
-	private final Publisher publisher;
-
-	public MenuQueryHandler(MenuRepository repository, Publisher publisher) {
-		this.repository = repository;
-		this.publisher = publisher;
+public record MenuQueryHandler(MealRepository repository, IngredientRepository ingredientRepository) {
+	public Meal handle(GetMealByName getMealByName) {
+		String name = getMealByName.name();
+		return this.repository.findByName(name).orElseThrow(() ->
+				new MealNotFoundException(name));
 	}
-
-	public List<Menu> handle(GetMenusByName getMenuByName) {
-		String name = getMenuByName.getName();
-		publisher.publishMessage(String.format("%s", name));
-		return this.repository.findAllByName(name);
+	public List<Meal> handle() {
+		List<Meal> meals = repository.findAll();
+		List<Meal> available = new ArrayList<>();
+		for (Meal meal : meals) {
+			boolean allAvailable = true;
+			for (String ingredient : meal.getIngredients().keySet()) {
+				int amount = meal.getIngredients().get(ingredient);
+				if (!ingredientRepository.areIngredientsAvailable(ingredient, amount)) {
+					allAvailable = false;
+				}
+			}
+			if (allAvailable) available.add(meal);
+		}
+		return available;
 	}
 }

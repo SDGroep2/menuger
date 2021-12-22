@@ -13,7 +13,7 @@ public class Publisher {
 	private final RabbitTemplate rabbitTemplate;
 	@Value("${menuger.exchange}")
 	private final String messageExchange;
-	@Value("${menu-inventory.routing-key}")
+	@Value("${kitchen-inventory.routing-key}")
 	private final String routingKey;
 
 	public void publishMessage(String message) {

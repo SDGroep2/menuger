@@ -13,14 +13,11 @@ import java.util.UUID;
 @Setter
 public class Ingredient {
     @Id
-    private UUID id;
-    @Indexed(unique = true)
     private String name;
     private int amount;
     private int amountReserved;
 
-    public Ingredient(UUID id, String name, int amount, int amountReserved) {
-        this.id = id;
+    public Ingredient(String name, int amount, int amountReserved) {
         this.name = name;
         this.amount = amount;
         this.amountReserved = amountReserved;
