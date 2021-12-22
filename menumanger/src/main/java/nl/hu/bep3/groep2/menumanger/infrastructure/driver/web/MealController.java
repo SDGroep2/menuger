@@ -4,11 +4,13 @@ import nl.hu.bep3.groep2.menumanger.core.application.MealCommandHandler;
 import nl.hu.bep3.groep2.menumanger.core.application.MenuQueryHandler;
 import nl.hu.bep3.groep2.menumanger.core.application.command.CreateMeal;
 import nl.hu.bep3.groep2.menumanger.core.application.command.CreateOrder;
+import nl.hu.bep3.groep2.menumanger.core.application.query.GetIngredientsOfMeal;
 import nl.hu.bep3.groep2.menumanger.core.application.query.GetMealByName;
 import nl.hu.bep3.groep2.menumanger.core.domain.Meal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/meal")
@@ -24,6 +26,11 @@ public class MealController {
 	@GetMapping("/{name}")
 	public Meal getMealByName(@PathVariable String name) {
 		return queryHandler.handle(new GetMealByName(name));
+	}
+
+	@GetMapping("/{name}/ingredients")
+	public Map<String, Integer> getMealIngredients(@PathVariable String name) {
+		return queryHandler.handle(new GetIngredientsOfMeal(name));
 	}
 
 	@GetMapping

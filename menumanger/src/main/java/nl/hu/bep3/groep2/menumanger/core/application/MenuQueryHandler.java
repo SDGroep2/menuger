@@ -1,5 +1,6 @@
 package nl.hu.bep3.groep2.menumanger.core.application;
 
+import nl.hu.bep3.groep2.menumanger.core.application.query.GetIngredientsOfMeal;
 import nl.hu.bep3.groep2.menumanger.core.application.query.GetMealByName;
 import nl.hu.bep3.groep2.menumanger.core.domain.Meal;
 import nl.hu.bep3.groep2.menumanger.core.domain.exception.MealNotFoundException;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public record MenuQueryHandler(MealRepository repository, IngredientRepository ingredientRepository) {
@@ -17,6 +19,13 @@ public record MenuQueryHandler(MealRepository repository, IngredientRepository i
 		return this.repository.findByName(name).orElseThrow(() ->
 				new MealNotFoundException(name));
 	}
+
+	public Map<String, Integer> handle(GetIngredientsOfMeal meal) {
+		return this.repository.findByName(meal.getName())
+				.orElseThrow(() -> new MealNotFoundException(meal.getName()))
+				.getIngredients();
+	}
+
 	public List<Meal> handle() {
 		List<Meal> meals = repository.findAll();
 		List<Meal> available = new ArrayList<>();
