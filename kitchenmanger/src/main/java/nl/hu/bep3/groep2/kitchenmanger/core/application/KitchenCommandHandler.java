@@ -1,59 +1,40 @@
 package nl.hu.bep3.groep2.kitchenmanger.core.application;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.command.ChangeOrderStatus;
-import nl.hu.bep3.groep2.kitchenmanger.core.application.command.CreateNewOrder;
+import nl.hu.bep3.groep2.kitchenmanger.core.application.command.CreateOrder;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
-import nl.hu.bep3.groep2.kitchenmanger.core.domain.event.OrderEvent;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.event.OrderWasCreated;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.event.OrderWasUpdated;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.exception.OrderIdNotFoundException;
-import nl.hu.bep3.groep2.kitchenmanger.core.port.messaging.OrderEventPublisher;
-import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.OrderRepository;
-import nl.hu.bep3.groep2.kitchenmanger.infrastructure.driven.messaging.Publisher;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.KitchenRepository;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.messaging.Publisher;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class KitchenCommandHandler {
-	private final OrderRepository orderRepository;
-	private final OrderEventPublisher orderEventPublisher;
+	private final KitchenRepository orderRepository;
 	private final Publisher publisher;
 
-	public KitchenCommandHandler(OrderRepository orderRepository, OrderEventPublisher orderEventPublisher, Publisher publisher) {
-		this.orderRepository = orderRepository;
-		this.orderEventPublisher = orderEventPublisher;
+	@JsonCreator
+	public KitchenCommandHandler(KitchenRepository kitchenRepository, Publisher publisher) {
+		this.orderRepository = kitchenRepository;
 		this.publisher = publisher;
 	}
 
-	public Order handle(CreateNewOrder command) {
-		Order order = new Order(command.getTable(), command.getMeals(), command.getStatus());
-
-		this.publishEventsFor(order);
-		this.orderRepository.save(order);
-
+	public Order handle(CreateOrder newOrder) {
+		Order order = new Order(newOrder.id(), newOrder.table(), newOrder.meals(), newOrder.status());
+		orderRepository.save(order);
+		publisher.publish(new OrderWasCreated(order));
 		return order;
 	}
 
-	public Order handle(ChangeOrderStatus command) {
-		Order order = this.getOrderById(command.getId());
-
-		order.changeOrderStatus(command.getStatus());
-		this.publishEventsFor(order);
-		this.orderRepository.save(order);
-
+	public Order handle(ChangeOrderStatus changeOrder) {
+		Order order = orderRepository.findById(changeOrder.id()).orElseThrow(() -> new OrderIdNotFoundException("Id not found"));
+		orderRepository.save(order);
+		publisher.publish(new OrderWasUpdated(order));
 		return order;
 	}
-
-	private Order getOrderById(UUID id) {
-		return this.orderRepository.findById(id)
-				.orElseThrow(() -> new OrderIdNotFoundException(id.toString()));
-	}
-
-	private void publishEventsFor(Order order) {
-		List<OrderEvent> events = order.listEvents();
-		events.forEach(orderEventPublisher::publish);
-		order.clearEvents();
-	}
-
 
 }

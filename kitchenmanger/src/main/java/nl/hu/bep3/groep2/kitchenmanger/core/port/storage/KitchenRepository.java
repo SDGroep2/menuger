@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.UUID;
 
-public interface OrderRepository extends MongoRepository<Order, UUID> {
+public interface KitchenRepository extends MongoRepository<Order, UUID> {
 }

@@ -1,36 +1,31 @@
 package nl.hu.bep3.groep2.kitchenmanger.core.application;
 
-import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetAllOrders;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
-import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.OrderRepository;
-import nl.hu.bep3.groep2.kitchenmanger.infrastructure.driven.messaging.Publisher;
-import org.springframework.data.domain.Sort;
+import nl.hu.bep3.groep2.kitchenmanger.core.domain.Status;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.storage.KitchenRepository;
+import nl.hu.bep3.groep2.kitchenmanger.core.port.messaging.Publisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class KitchenQueryHandler {
-	private final OrderRepository orderRepository;
+	private final KitchenRepository kitchenRepository;
 	private final Publisher publisher;
 
-	public KitchenQueryHandler(OrderRepository orderRepository, Publisher publisher) {
-		this.orderRepository = orderRepository;
+	public KitchenQueryHandler(KitchenRepository kitchenRepository, Publisher publisher) {
+		this.kitchenRepository = kitchenRepository;
 		this.publisher = publisher;
 	}
 
-	public List<Order> handle(GetAllOrders query) {
-		Sort sort = createSort(query.getOrderBy(), query.getDirection());
-		return this.orderRepository.findAll(sort);
-	}
-
-	private Sort createSort(String orderBy, String direction) {
-		Sort sort = Sort.by(Sort.Direction.ASC, orderBy);
-
-		if (direction.equals("desc")) {
-			sort = sort.descending();
+	public List<Order> handle() {
+		List<Order> activeOrders = null;
+		List<Order> orders = kitchenRepository.findAll();
+		for (Order order : orders) {
+			if (order.getStatus() == Status.ORDERED) {
+				activeOrders.add(order);
+			}
 		}
-
-		return sort;
+		return activeOrders;
 	}
 }

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-@Document
+@Document(collection = "orders")
 @Getter
 @Setter
 public class Order {
@@ -24,8 +24,8 @@ public class Order {
     @Transient
     private List<OrderEvent> events = new ArrayList<>();
 
-    public Order(int table, HashMap<String, Integer> meals, Status status) {
-        this.id = UUID.randomUUID();
+    public Order(UUID id, int table, HashMap<String, Integer> meals, Status status) {
+        this.id = id;
         this.table = table;
         this.meals = meals;
         this.status = status;
