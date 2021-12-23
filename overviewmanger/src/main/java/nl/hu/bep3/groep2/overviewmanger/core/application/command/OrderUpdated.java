@@ -8,11 +8,11 @@ import java.util.UUID;
 
 @Getter
 public class OrderUpdated {
-    private UUID id;
-    private String status;
-    private Instant updatedAt;
+    private final UUID id;
+    private final Status status;
+    private final Instant updatedAt;
 
-    public OrderUpdated(UUID id, String status, Instant updatedAt) {
+    public OrderUpdated(UUID id, Status status, Instant updatedAt) {
         this.id = id;
         this.status = status;
         this.updatedAt = updatedAt;

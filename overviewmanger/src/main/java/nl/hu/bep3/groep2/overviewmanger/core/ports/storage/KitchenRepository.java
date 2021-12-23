@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface KitchenRepository extends MongoRepository<Order, UUID> {
-    Optional<Order> findById(int name);
+public interface KitchenRepository {
+    Order findById(UUID id);
 }
