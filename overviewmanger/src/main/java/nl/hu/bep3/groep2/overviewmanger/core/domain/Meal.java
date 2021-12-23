@@ -5,7 +5,10 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Document
@@ -14,14 +17,17 @@ import java.util.UUID;
 public class Meal {
     @Id
     private String name;
-    private List<String> ingredients;
-    private double price;
     private int amount;
+    private List<Instant> orderedAt = new ArrayList<>();
 
-    public Meal(String name, List<String> ingredients, double price, int amount) {
+    public Meal(String name, int amount, List<Instant> orderedAt) {
         this.name = name;
-        this.ingredients = ingredients;
-        this.price = price;
         this.amount = amount;
+        this.orderedAt = orderedAt;
+    }
+
+    public void addOrderedAt(Instant createdAt) {
+        orderedAt.add(createdAt);
     }
 }
+
