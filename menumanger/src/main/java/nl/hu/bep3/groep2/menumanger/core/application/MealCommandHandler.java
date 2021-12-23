@@ -35,7 +35,7 @@ public class MealCommandHandler {
 	}
 
 	public CreateOrder handle(CreateOrder createOrder) {
-		createOrder.meals().forEach(meal -> repository.findByName(meal)
+		createOrder.meals().keySet().forEach(meal -> repository.findByName(meal)
 				.orElseThrow(() -> new MealNotFoundException(meal)));
 		return kitchenRepository.save(createOrder);
 	}
