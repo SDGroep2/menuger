@@ -7,14 +7,13 @@ import java.util.UUID;
 
 @Getter
 public class OrderUpdated {
-    //TODO: Stop passing ingredients here and get them from kitchen database in handler using order id
-    private UUID id;
-    private String status;
-    private final Map<String, Integer> ingredients;
+    private final UUID id;
+    private final String status;
+    private final Map<String, Integer> meals;
 
-    public OrderUpdated(UUID id, String status, Map<String, Integer> ingredients) {
+    public OrderUpdated(UUID id, String status, Map<String, Integer> meals) {
         this.id = id;
         this.status = status;
-        this.ingredients = ingredients;
+        this.meals = meals;
     }
 }
