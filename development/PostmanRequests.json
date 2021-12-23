@@ -1,0 +1,211 @@
+{
+  "info": {
+    "_postman_id": "124423df-16c4-4de4-9764-40023f3056ff",
+    "name": "Menuger",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Menu",
+      "item": [
+        {
+          "name": "CreateMeal",
+          "id": "550296d3-b72c-4bb4-92d0-1d38400994e1",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Pittige spareribs\",\r\n    \"price\":19.95,\r\n    \"ingredients\":{\r\n        \"Varkensribben\":1,\r\n        \"Pittige saus\":2\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:8081/meal"
+          },
+          "response": []
+        },
+        {
+          "name": "CreateOrder",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"OrderId\", pm.response.json().id)"
+                ]
+              }
+            }
+          ],
+          "id": "700e7965-454b-4b3b-b922-664ba641d541",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"table\":1,\r\n    \"meals\": {\r\n        \"Pittige spareribs\":1,\r\n        \"Milde spareribs\":2\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:8081/meal/order"
+          },
+          "response": []
+        },
+        {
+          "name": "GetAvailableMeals",
+          "id": "c44a4039-b5d9-4234-bd3b-86fa828a57fc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:8081/meal"
+          },
+          "response": []
+        }
+      ],
+      "id": "30e046d6-5c22-453e-afda-8385f2dff716"
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "CreateIngredient",
+          "id": "73253e3b-2646-4b03-9920-f81dfc0be3e6",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ingredients\": {\r\n        \"Varkensribben\":100,\r\n        \"Pittige saus\":200,\r\n        \"Milde saus\":200\r\n        }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:8082/inventory/"
+          },
+          "response": []
+        },
+        {
+          "name": "GetAvailableIngredients",
+          "id": "9bbd7915-a9aa-4eb3-a206-1a66acaf3450",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8082/inventory?name=Pittige saus&amount=10",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "inventory"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Pittige saus"
+                },
+                {
+                  "key": "amount",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "170edf7e-4cac-4419-a2f8-f1c743dd24d4"
+    },
+    {
+      "name": "Kitchen",
+      "item": [
+        {
+          "name": "GetActiveOrders",
+          "id": "3a28aacd-50ce-46fb-8b77-0e487f69007a",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:8083/kitchen/orders"
+          },
+          "response": []
+        },
+        {
+          "name": "GetOrder",
+          "id": "2519349b-b0a6-4061-aa83-a6eca6ee2bbf",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:8083/kitchen/{{OrderId}}"
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateOrderStatus",
+          "id": "8613ffd2-b28f-4174-baf8-e4bf15ed5266",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\":2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "localhost:8083/kitchen/order/{{OrderId}}"
+          },
+          "response": []
+        }
+      ],
+      "id": "1935449f-bbf4-4508-827e-b4ea323d995e"
+    },
+    {
+      "name": "Overview",
+      "item": [
+        {
+          "name": "GetStatistics",
+          "id": "968d7c77-4eb3-4925-972b-ad11a5d3faf9",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:8084/orders/stats"
+          },
+          "response": []
+        },
+        {
+          "name": "GetAllOrders",
+          "id": "5e946db2-7726-4f11-a64a-3c42a5180c06",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "localhost:8084/orders/"
+          },
+          "response": []
+        }
+      ],
+      "id": "e4163753-b045-4513-bc11-ca61a12cb160"
+    }
+  ],
+  "variable": [
+    {
+      "id": "d2f62baf-2f7a-4c58-bb74-f11e12936601",
+      "key": "OrderId",
+      "value": "263fbd4e-373a-4710-ac93-b21007e6acd3"
+    },
+    {
+      "id": "7c9bcf8a-e315-422f-bd98-8ce6a4ed0ee8",
+      "key": "OrderId",
+      "value": ""
+    }
+  ]
+}

@@ -18,8 +18,6 @@ public class Order {
     private int table;
     private Map<String, Integer> meals;
     private Status status;
-    @Transient
-    private List<OrderEvent> events = new ArrayList<>();
 
     public Order(UUID id, int table, Map<String, Integer> meals, Status status) {
         this.id = id;

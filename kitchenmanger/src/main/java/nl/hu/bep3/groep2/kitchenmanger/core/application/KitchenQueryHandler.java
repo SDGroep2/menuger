@@ -1,5 +1,6 @@
 package nl.hu.bep3.groep2.kitchenmanger.core.application;
 
+import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetMealsOfOrder;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetOrder;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.Status;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class KitchenQueryHandler {
@@ -31,5 +33,11 @@ public class KitchenQueryHandler {
 
 	public Order handle(GetOrder order) {
 		return kitchenRepository.findById(order.id()).orElseThrow(() -> new OrderIdNotFoundException(order.id().toString()));
+	}
+
+	public Map<String, Integer> handle(GetMealsOfOrder order) {
+		return kitchenRepository.findById(order.id())
+				.orElseThrow(() -> new OrderIdNotFoundException(order.id().toString()))
+				.getMeals();
 	}
 }

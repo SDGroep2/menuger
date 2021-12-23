@@ -14,12 +14,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 public class MQConfig {
-    @Value("${overview.queue}")
-    public String QUEUE;
     @Value("${menuger.exchange}")
     public String EXCHANGE;
-    @Value("${overview.routing-key}")
-    public String ROUTING_KEY;
     @Value("${spring.rabbitmq.host}")
     public String HOST;
     @Value("${spring.rabbitmq.port}")
@@ -29,22 +25,9 @@ public class MQConfig {
     @Value("${overview.order.routing-key}")
     public String ORDER_ROUTING_KEY;
 
-
-    @Bean
-    public Queue queue() {
-        return QueueBuilder.durable(QUEUE).build();
-    }
-
     @Bean
     public TopicExchange exchange() {
         return new TopicExchange(EXCHANGE);
-    }
-
-    @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(queue())
-                .to(exchange())
-                .with(ROUTING_KEY);
     }
 
     @Bean

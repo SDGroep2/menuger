@@ -21,7 +21,7 @@ public class MessageListener {
     public void listen(OrderPlacedEvent event) throws IngredientNotFoundException, NotEnoughIngredientsException {
         switch (event.getEventKey()) {
             case "kitchen.orders.created" -> inventoryCommandHandler.handle(new OrderCreated(event.getMeals()));
-            case "kitchen.orders.updated" -> inventoryCommandHandler.handle(new OrderUpdated(event.getOrderId(),
+            case "kitchen.orders.updated" -> inventoryCommandHandler.handle(new OrderUpdated(event.getId(),
                     event.getStatus(),
                     event.getMeals()));
         }

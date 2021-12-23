@@ -4,11 +4,13 @@ import nl.hu.bep3.groep2.kitchenmanger.core.application.KitchenCommandHandler;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.KitchenQueryHandler;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.command.ChangeOrderStatus;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.command.CreateOrder;
+import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetMealsOfOrder;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetOrder;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +37,11 @@ public class KitchenController {
 	@GetMapping("/{id}")
 	public Order getOrder(@PathVariable UUID id){
 		return this.queryHandler.handle(new GetOrder(id));
+	}
+
+	@GetMapping("/{id}/meals")
+	public Map<String, Integer> getMealsOfOrder(@PathVariable UUID id){
+		return this.queryHandler.handle(new GetMealsOfOrder(id));
 	}
 
 	@GetMapping("/orders")

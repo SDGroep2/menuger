@@ -9,6 +9,7 @@ import nl.hu.bep3.groep2.inventorymanger.core.application.exceptions.IngredientN
 import nl.hu.bep3.groep2.inventorymanger.core.application.exceptions.NotEnoughIngredientsException;
 import nl.hu.bep3.groep2.inventorymanger.core.domain.Ingredient;
 import nl.hu.bep3.groep2.inventorymanger.core.ports.storage.InventoryRepository;
+import nl.hu.bep3.groep2.inventorymanger.core.ports.storage.KitchenRepository;
 import nl.hu.bep3.groep2.inventorymanger.core.ports.storage.MenuRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +23,14 @@ import java.util.Map;
 public class InventoryCommandHandler {
     private final InventoryRepository inventoryRepository;
     private final MenuRepository menuRepository;
+    private final KitchenRepository kitchenRepository;
 
 
-    public InventoryCommandHandler(InventoryRepository inventoryRepository, MenuRepository menuRepository) {
+    public InventoryCommandHandler(InventoryRepository inventoryRepository, MenuRepository menuRepository,
+                                   KitchenRepository kitchenRepository) {
         this.inventoryRepository = inventoryRepository;
         this.menuRepository = menuRepository;
+        this.kitchenRepository = kitchenRepository;
     }
 
     //Makes a new ingredient in the database
@@ -48,7 +52,6 @@ public class InventoryCommandHandler {
             dbIngredient.setAmount(newAmount);
             inventoryRepository.save(dbIngredient);
         }
-        ;
     }
 
     //reserves ingredients of an order in the database
@@ -74,7 +77,7 @@ public class InventoryCommandHandler {
             if (reservedAmount <= dbIngredient.getAmount()) {
                 dbIngredient.setAmountReserved(reservedAmount);
                 dbIngredients.add(dbIngredient);
-            }else{
+            } else {
                 throw new NotEnoughIngredientsException("Not enough ingredients of type: " + ingredient + " were found.");
             }
         }
@@ -86,10 +89,11 @@ public class InventoryCommandHandler {
     public void handle(OrderUpdated command) throws IngredientNotFoundException {
         //get list of requested ingredients
         Map<String, Integer> usedIngredients = new HashMap<>();
-        for (String meal : command.getMeals().keySet()) {
+        Map<String, Integer> mealsInOrder = kitchenRepository.getMealsForOrder(command.getId());
+        for (String meal : mealsInOrder.keySet()) {
             Map<String, Integer> ingredients = menuRepository.getIngredientsOfMeal(meal);
             for (String ingredient : ingredients.keySet()) {
-                int amountNew = ingredients.get(ingredient) * command.getMeals().get(meal);
+                int amountNew = ingredients.get(ingredient) * mealsInOrder.get(meal);
                 int count = usedIngredients.containsKey(ingredient) ?
                         usedIngredients.get(ingredient) + amountNew : amountNew;
                 usedIngredients.put(ingredient, count);
