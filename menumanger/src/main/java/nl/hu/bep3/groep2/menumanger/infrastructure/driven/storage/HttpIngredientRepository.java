@@ -16,7 +16,7 @@ public class HttpIngredientRepository implements IngredientRepository {
 
 	@Override
 	public boolean areIngredientsAvailable(String ingredient, int amount) {
-		URI uri = URI.create(this.rootPath + "?name=" + ingredient + "&amount=" + amount);
+		URI uri = URI.create(this.rootPath + "?name=" + ingredient.replaceAll(" ", "%20") + "&amount=" + amount);
 		return Boolean.TRUE.equals(this.client.getForObject(uri, boolean.class));
 	}
 }

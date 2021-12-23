@@ -16,6 +16,7 @@ public class HttpMenuRepository implements MenuRepository {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Map<String, Integer> getIngredientsOfMeal(String meal) {
         URI uri = URI.create(this.rootPath + "/" + meal.replaceAll(" ", "%20") + "/ingredients");
         return (Map<String, Integer>) this.client.getForObject(uri, Map.class);

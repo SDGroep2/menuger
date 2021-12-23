@@ -6,7 +6,7 @@ import java.util.Map;
 
 @Getter
 public class MakeNewIngredient {
-    private Map<String, Integer> ingredients;
+    private final Map<String, Integer> ingredients;
 
     @JsonCreator
     public MakeNewIngredient(Map<String, Integer> ingredients) {
