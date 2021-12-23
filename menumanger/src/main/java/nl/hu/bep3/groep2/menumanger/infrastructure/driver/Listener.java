@@ -5,7 +5,7 @@ import nl.hu.bep3.groep2.menumanger.infrastructure.driver.messaging.event.Kitche
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
 public record Listener(MealCommandHandler commandHandler) {
-	@RabbitListener(queues = "#{'${menu.kitchen.queue}'}")
+	@RabbitListener(queues = "#{'${kitchen.menu.queue}'}")
 	public void listen(KitchenEvent event) {
 		switch (event.getEventKey()) {
 			case "kitchen.orders.created" -> System.out.println("Order has been created");

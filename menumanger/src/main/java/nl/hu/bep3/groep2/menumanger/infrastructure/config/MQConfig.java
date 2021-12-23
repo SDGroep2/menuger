@@ -14,7 +14,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 public class MQConfig {
-	@Value("${menu.kitchen.queue}")
+	@Value("${kitchen.menu.queue}")
 	public String QUEUE;
 	@Value("${menuger.exchange}")
 	public String EXCHANGE;
