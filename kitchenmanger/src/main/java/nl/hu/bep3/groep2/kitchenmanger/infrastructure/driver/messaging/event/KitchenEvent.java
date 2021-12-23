@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class MenuEvent {
+public class KitchenEvent {
     private final UUID eventId;
     private final Instant eventDate;
     private final String eventKey;
     private final int table;
     private final List<String> meals;
 
-    public MenuEvent(UUID eventId, Instant eventDate, String eventKey, int table, List<String> meals) {
+    public KitchenEvent(UUID eventId, Instant eventDate, String eventKey, int table, List<String> meals) {
         this.eventId = eventId;
         this.eventDate = eventDate;
         this.eventKey = eventKey;

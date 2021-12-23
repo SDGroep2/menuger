@@ -4,6 +4,7 @@ import nl.hu.bep3.groep2.kitchenmanger.core.application.KitchenCommandHandler;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.KitchenQueryHandler;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.command.ChangeOrderStatus;
 import nl.hu.bep3.groep2.kitchenmanger.core.application.command.CreateOrder;
+import nl.hu.bep3.groep2.kitchenmanger.core.application.query.GetOrder;
 import nl.hu.bep3.groep2.kitchenmanger.core.domain.Order;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +27,18 @@ public class KitchenController {
 		return this.commandHandler.handle(newOrder);
 	}
 
-	@PutMapping("/order/{id}/change-status")
+	@PutMapping("/order/{id}")
 	public Order changeOrder(@PathVariable UUID id, @RequestBody ChangeOrderStatus changeOrderStatus) {
-		return this.commandHandler.handle(changeOrderStatus);
+		return this.commandHandler.handle(id, changeOrderStatus);
+	}
+
+	@GetMapping("/{id}")
+	public Order getOrder(@PathVariable UUID id){
+		return this.queryHandler.handle(new GetOrder(id));
 	}
 
 	@GetMapping("/orders")
 	public List<Order> getActiveOrders() {
-		return queryHandler.handle();
+		return this.queryHandler.handle();
 	}
 }
